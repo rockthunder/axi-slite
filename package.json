@@ -1,9 +1,17 @@
 {
   "name": "slite-axi",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "AXI-compliant CLI for Slite — token-efficient TOON output, idempotent note mutations, structured errors",
   "license": "MIT",
   "type": "module",
+  "homepage": "https://github.com/rockthunder/axi-slite#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rockthunder/axi-slite.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rockthunder/axi-slite/issues"
+  },
   "bin": {
     "slite-axi": "bin/slite-axi.js"
   },

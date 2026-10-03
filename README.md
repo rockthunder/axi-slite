@@ -1,5 +1,7 @@
 # slite-axi
 
+[![npm](https://img.shields.io/npm/v/slite-axi?style=flat-square)](https://www.npmjs.com/package/slite-axi)
+
 AXI-compliant CLI for [Slite](https://slite.com): search, read, and manage notes with
 token-efficient [TOON](https://github.com/toon-format/toon) output, built on
 [`axi-sdk-js`](https://github.com/kunchenguid/axi) so it follows the same
@@ -58,7 +60,9 @@ this works the same on macOS, Linux, and Windows (including WSL).
 
 ## Install
 
-### Option A — global install from npm (recommended once published)
+### Option A — global install from npm (recommended)
+
+Published at [npmjs.com/package/slite-axi](https://www.npmjs.com/package/slite-axi):
 
 ```sh
 npm install -g slite-axi
@@ -71,13 +75,11 @@ slite-axi --version
 npx slite-axi search "onboarding checklist"
 ```
 
-### Option C — from this source checkout (current state of this repo)
-
-The package is not yet published to the npm registry — until it is, install it
-straight from the checkout:
+### Option C — from a source checkout (for local development)
 
 ```sh
-cd /Users/paulharrington/dev/slite
+git clone https://github.com/rockthunder/axi-slite.git
+cd axi-slite
 npm install          # installs the one runtime dependency, axi-sdk-js
 npm link              # exposes `slite-axi` on your PATH, pointing at this checkout
 slite-axi --version
@@ -284,6 +286,35 @@ no network access or real API key is required to run or contribute to this proje
 npm test                           # run everything
 node --test test/client.test.js     # run a single file
 ```
+
+### Releasing
+
+Publishing is manual (no CI/OIDC publisher wired up yet, unlike `axi-sdk-js` and the
+other AXI tools which publish via GitHub Actions):
+
+1. Bump the version in **both** `package.json` and `src/version.js` (kept in sync by
+   hand — there's no build step that derives one from the other).
+2. Update this README if behavior changed.
+3. Run the full check before publishing:
+
+   ```sh
+   npm test
+   npm audit --omit=dev
+   ```
+
+4. Publish:
+
+   ```sh
+   npm login            # once per machine
+   npm publish
+   ```
+
+5. Tag the release in git:
+
+   ```sh
+   git tag v$(node -p "require('./package.json').version")
+   git push origin --tags
+   ```
 
 ## Project layout
 
