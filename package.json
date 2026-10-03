@@ -1,0 +1,30 @@
+{
+  "name": "slite-axi",
+  "version": "0.1.0",
+  "description": "AXI-compliant CLI for Slite — token-efficient TOON output, idempotent note mutations, structured errors",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "slite-axi": "bin/slite-axi.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "keywords": [
+    "slite",
+    "cli",
+    "agent",
+    "axi",
+    "toon"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "axi-sdk-js": "^0.1.13"
+  }
+}
