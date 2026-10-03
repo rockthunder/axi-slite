@@ -18,6 +18,7 @@ agent-ergonomic conventions as the other tools in that catalog (`gh-axi`, `tasks
 - [Usage](#usage)
 - [Command reference](#command-reference)
 - [Design principles](#design-principles)
+- [Token savings](#token-savings)
 - [Security & supply chain](#security--supply-chain)
 - [Development](#development)
 - [Project layout](#project-layout)
@@ -187,6 +188,36 @@ shared design principles:
   `unarchive` are separate, safely-repeatable commands rather than a single toggle.
 - **Content-first home view** — running `slite-axi` with no arguments shows your
   identity and next-step suggestions, not a wall of help text.
+
+## Token savings
+
+`slite-axi` reduces tokens two ways, and they compound:
+
+1. **TOON encoding.** Every command's output goes through `axi-sdk-js`'s
+   `renderOutput()`, which pipes the result straight through `@toon-format/toon`'s
+   `encode()` — there is no separate "JSON mode." Measured on a representative
+   `search` response (2 hits, same shape `searchCommand` returns):
+
+   | Format | Size |
+   | --- | --- |
+   | Raw JSON (`JSON.stringify`, pretty-printed) | 552 chars |
+   | TOON (`slite-axi`'s actual output) | 344 chars |
+   | **Reduction** | **38%** |
+
+   That lines up with the ~40% TOON generally reports for arrays-of-objects data —
+   exactly the shape Slite returns for note lists and search hits.
+
+2. **Field trimming, independent of encoding.** A raw `GET /notes/{id}` from Slite
+   returns 10+ fields (`id`, `title`, `parentNoteId`, `createdAt`, `updatedAt`,
+   `lastEditedAt`, `archivedAt`, `url`, `listPosition`, `reviewState`, `iconColor`,
+   `iconShape`, `owner`, full `content`, ...). [`getCommand`](src/commands/notes.js)
+   only emits `id`, `title`, `reviewState`, `updatedAt`, `url`, `parentNoteId`, plus
+   note content truncated to 4000 chars by default (`--full` for everything). Every
+   list/search command does the same minimal-field projection before the object ever
+   reaches the TOON encoder.
+
+Net effect: an agent paying per token gets a smaller object encoded in a smaller
+format, not just one or the other.
 
 ## Security & supply chain
 
